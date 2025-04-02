@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Nutralive - Mockup v2 (Final Revisado)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        // Define 'Inter' como a fonte padrão sans-serif
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Paleta de cores para a interface
+                        'sidebar-bg': '#1e293b', // Cor de fundo da sidebar (cinza escuro/azulado)
+                        'sidebar-text': '#cbd5e1', // Cor do texto padrão na sidebar (cinza claro)
+                        'sidebar-hover-bg': '#334155', // Cor de fundo do link da sidebar ao passar o mouse (cinza médio)
+                        'sidebar-active-bg': '#475569', // Cor de fundo do link ativo na sidebar (cinza mais escuro)
+                        'brand-primary': '#2563eb', // Cor primária da marca (azul)
+                        'brand-primary-active': '#1d4ed8', // Cor primária para estado ativo/hover de botões (azul mais escuro)
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos CSS customizados */
+        body {
+             background-color: #f1f5f9; /* Cor de fundo principal da página (cinza claro) */
+             font-family: 'Inter', sans-serif; /* Aplica a fonte Inter */
+             overflow-x: hidden; /* Previne scroll horizontal acidental */
+        }
+        /* Estilo para placeholders de gráficos */
+        .chart-placeholder {
+            background-color: #f8fafc; /* Fundo do placeholder (cinza muito claro) */
+            border-radius: 0.5rem; /* Bordas arredondadas */
+            display: flex;
+            align-items: center; /* Centraliza verticalmente */
+            justify-content: center; /* Centraliza horizontalmente */
+            font-size: 0.875rem; /* Tamanho da fonte do texto placeholder */
+            color: #94a3b8; /* Cor do texto placeholder (cinza médio) */
+            min-height: 120px; /* Altura mínima */
+            border: 1px dashed #e2e8f0; /* Borda tracejada */
+            padding: 1rem; /* Espaçamento interno */
+            text-align: center; /* Alinhamento do texto */
+        }
+        /* Estilo para valores grandes de KPI */
+        .kpi-value-large {
+            font-size: 2rem; /* Tamanho da fonte */
+            font-weight: 600; /* Peso da fonte (semibold) */
+            color: #1e293b; /* Cor do texto (cinza escuro/azulado) */
+            line-height: 1.1; /* Altura da linha */
+        }
+        /* Estilo para labels de KPI */
+        .kpi-label {
+            font-size: 0.875rem; /* Tamanho da fonte */
+            color: #64748b; /* Cor do texto (cinza médio) */
+            margin-bottom: 0.25rem; /* Margem inferior */
+        }
+        /* Estilo para descrições de KPI */
+        .kpi-description {
+             font-size: 0.875rem; /* Tamanho da fonte */
+             color: #475569; /* Cor do texto (cinza mais escuro) */
+             line-height: 1.5; /* Altura da linha */
+             margin-top: 0.75rem; /* Margem superior */
+        }
+        /* Estilo para títulos de seção */
+        .section-title {
+            font-size: 1.125rem; /* Tamanho da fonte */
+            font-weight: 600; /* Peso da fonte */
+            color: #334155; /* Cor do texto */
+            margin-bottom: 1rem; /* Margem inferior */
+            display: flex; /* Layout flexível */
+            align-items: center; /* Alinha itens verticalmente */
+            gap: 0.5rem; /* Espaçamento entre ícone e texto */
+        }
+        /* Estilo para cards de conteúdo */
+        .content-card {
+             position: relative; /* Permite posicionamento absoluto de filhos (botão info) */
+             background-color: white; /* Cor de fundo */
+             border-radius: 0.75rem; /* Bordas arredondadas */
+             padding: 1.5rem; /* Espaçamento interno */
+             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.07); /* Sombra sutil */
+        }
+        /* Estilos para tabelas */
+        th { /* Cabeçalho da tabela */
+            text-align: left; padding: 0.75rem 1rem; background-color: #f8fafc;
+            font-weight: 500; font-size: 0.75rem; color: #475569;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        td { /* Célula da tabela */
+            padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9;
+            font-size: 0.875rem; color: #334155;
+        }
+        tr:last-child td { border-bottom: none; } /* Remove borda da última linha */
+
+        /* Estilos da Sidebar */
+        .sidebar {
+            width: 256px; /* Largura fixa */
+            transition: width 0.3s ease; /* Transição suave (para futuro colapso) */
+        }
+        .sidebar-link { /* Estilo base do link da sidebar */
+            display: flex; align-items: center; padding: 0.75rem 1.5rem;
+            color: var(--sidebar-text); font-weight: 500; border-radius: 0.5rem;
+            margin: 0.25rem 0.75rem; transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .sidebar-link:hover { /* Estilo ao passar o mouse */
+             background-color: var(--sidebar-hover-bg); color: #f8fafc;
+        }
+        .sidebar-link.active { /* Estilo do link ativo */
+            background-color: var(--brand-primary); /* Usa a cor primária da marca */
+            color: white; font-weight: 600;
+        }
+        /* Filtro CSS para colorir ícones SVG da sidebar (inicial e hover/ativo) */
+        .sidebar-link img { filter: invert(90%) sepia(13%) saturate(276%) hue-rotate(176deg) brightness(94%) contrast(84%); }
+        .sidebar-link:hover img, .sidebar-link.active img { filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%); }
+
+        /* Estilo para input de arquivo customizado (drag & drop visual) */
+        .file-upload-label {
+            border: 2px dashed #cbd5e1; padding: 2rem; text-align: center; cursor: pointer;
+            border-radius: 0.5rem; transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .file-upload-label:hover { background-color: #f8fafc; border-color: var(--brand-primary); }
+        #file-upload-input { display: none; } /* Esconde o input de arquivo real */
+
+        /* Estilos para o Botão de Informação e Tooltip */
+        .info-button { /* Botão 'i' */
+            position: absolute; top: 1rem; right: 1rem; cursor: help; padding: 0.25rem;
+            border-radius: 9999px; background-color: #e2e8f0;
+            color: #64748b; transition: background-color 0.2s ease, color 0.2s ease; z-index: 10;
+        }
+        .info-button:hover { background-color: var(--brand-primary); color: white; }
+        .info-button .tooltip { /* Caixa de texto do tooltip */
+            visibility: hidden; /* Escondido por padrão */
+            opacity: 0; /* Transparente por padrão */
+            width: 280px; /* Largura fixa */
+            background-color: #334155; /* Fundo escuro */
+            color: #fff; /* Texto branco */
+            text-align: left; /* Alinhamento */
+            font-size: 0.75rem; /* Tamanho da fonte */
+            line-height: 1.4; /* Altura da linha */
+            border-radius: 0.375rem; /* Bordas arredondadas */
+            padding: 0.75rem; /* Espaçamento interno */
+            position: absolute; /* Posicionamento absoluto relativo ao botão */
+            z-index: 20; /* Garante que fique sobre outros elementos */
+            bottom: 125%; /* Posiciona acima do botão */
+            left: 50%; /* Centraliza horizontalmente relativo ao botão */
+            transform: translateX(-95%); /* Ajusta fino o posicionamento horizontal */
+            transition: opacity 0.3s ease; /* Transição suave de opacidade */
+        }
+        /* Seta indicadora do Tooltip */
+        .info-button .tooltip::after {
+            content: ""; position: absolute; top: 100%; /* Abaixo do tooltip */
+            right: 10%; /* Alinhado à direita do botão */
+            margin-left: -5px; border-width: 5px; border-style: solid;
+            border-color: #334155 transparent transparent transparent; /* Triângulo com cor do tooltip */
+        }
+        /* Mostra o tooltip no hover ou focus (acessibilidade) */
+        .info-button:hover .tooltip,
+        .info-button:focus .tooltip {
+            visibility: visible; /* Torna visível */
+            opacity: 1; /* Torna opaco */
+        }
+        /* Estilo do ícone 'i' dentro do botão */
+        .info-button img {
+             width: 1rem; height: 1rem; display: block; /* Remove espaço extra */
+             filter: invert(41%) sepia(10%) saturate(468%) hue-rotate(176deg) brightness(93%) contrast(88%); /* Cor inicial */
+         }
+        .info-button:hover img { filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(103deg) brightness(104%) contrast(104%); /* Cor no hover (branco) */ }
+
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <aside class="sidebar bg-sidebar-bg text-sidebar-text flex flex-col fixed inset-y-0 left-0 z-10">
+        <div class="p-6 text-center h-[68px] flex items-center justify-center">
+            <div class="text-xl font-bold text-white uppercase tracking-wider">
+                 [ Nutralive Logo ]
+             </div>
+             </div>
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <a href="#" class="sidebar-link">
+                <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/layout-dashboard.svg" alt="Ícone Visão Geral" class="w-5 h-5 mr-3"/>
+                Visão Geral
+            </a>
+            <a href="#" class="sidebar-link active">
+                <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/activity.svg" alt="Ícone Análise de LTV" class="w-5 h-5 mr-3"/>
+                Análise de LTV
+            </a>
+            <a href="#" class="sidebar-link">
+                 <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/settings.svg" alt="Ícone Configurações" class="w-5 h-5 mr-3"/>
+                Configurações
+            </a>
+        </nav>
+        <div class="p-4 mt-auto text-center text-xs text-slate-400">
+            Mockup v2.6 (Estilo Site) </div>
+    </aside>
+
+    <main class="flex-1 ml-64 p-6 lg:p-8 overflow-y-auto"> <header class="mb-8">
+            <h2 class="text-2xl font-semibold text-slate-800">Análise de LTV (Lifetime Value)</h2>
+            <p class="text-sm text-slate-500 mt-1">Explore as métricas chave que compõem e influenciam o valor do cliente.</p>
+        </header>
+
+        <section class="mb-8 content-card">
+             <h3 class="section-title mb-4">
+                 <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/upload-cloud.svg" alt="Ícone Upload" class="w-5 h-5 text-slate-500"/>
+                 Carregar Dados de Vendas
+             </h3>
+             <p class="text-sm text-slate-600 mb-2">
+                 Para calcular o LTV com precisão, faça o upload do extrato de vendas completo (formato .csv ou .xlsx) exportado do seu gateway de pagamento.
+                 O arquivo deve conter as seguintes colunas (ou nomes similares):
+             </p>
+             <ul class="list-disc list-inside text-sm text-slate-600 mb-4 space-y-1">
+                 <li><strong>Cliente / Email / Documento:</strong> Pelo menos um identificador único e consistente do cliente (ex: ID interno, Email ou CPF/CNPJ) - <em>Essencial para agrupar todas as compras de um mesmo cliente.</em></li>
+                 <li><strong>Tipo de venda:</strong> (ex: Primeira Compra, Recompra, Assinatura) - <em>Permite segmentar o LTV e entender padrões de recompra.</em></li>
+                 <li><strong>SKU / Produto:</strong> Identificadores do item vendido - <em>Permite analisar LTV por produto específico.</em></li>
+                 <li><strong>Status Pagamento:</strong> (ex: Aprovado, Pago, Concluído) - <em>Fundamental para garantir que apenas vendas efetivadas sejam consideradas nos cálculos.</em></li>
+                 <li><strong>Preço do Produto:</strong> Valor base do produto vendido.</li>
+                 <li><strong>Frete:</strong> Valor do frete cobrado na transação.</li>
+                 <li><em>(Opcional, mas útil: Data da Transação, Canal de Venda/Marketing)</em></li>
+             </ul>
+             <p class="text-sm text-slate-600 mb-4">
+                 Com base nesses campos, o sistema poderá calcular o valor total de cada transação aprovada (geralmente `Preço do Produto` + `Frete`), agrupar por cliente usando um dos identificadores (`Cliente`, `Email` ou `Documento`) para determinar AOV e Frequência, e analisar o `Tempo de Vida` e `Churn` com base nas datas das transações.
+             </p>
+
+             <label for="file-upload-input" class="file-upload-label block">
+                 <div class="flex flex-col items-center">
+                     <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/file-up.svg" alt="Ícone Selecionar Arquivo" class="w-12 h-12 text-slate-400 mb-2"/>
+                     <span class="text-base font-medium text-slate-600">Clique para selecionar o arquivo</span>
+                     <span class="text-xs text-slate-500 mt-1">CSV ou XLSX, até 50MB</span>
+                 </div>
+             </label>
+             <input type="file" id="file-upload-input" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+             <div class="mt-4 flex items-center justify-between">
+                 <span id="file-upload-feedback" class="text-sm text-slate-500">Nenhum arquivo selecionado.</span>
+                 <button id="process-button" class="bg-brand-primary text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-brand-primary-active transition duration-200 disabled:opacity-50" disabled>
+                     Processar Arquivo
+                 </button>
+             </div>
+             <script>
+                 const fileInput = document.getElementById('file-upload-input');
+                 const feedbackEl = document.getElementById('file-upload-feedback');
+                 const processBtn = document.getElementById('process-button');
+
+                 // Evento disparado quando um arquivo é selecionado
+                 fileInput.addEventListener('change', function() {
+                     if (this.files && this.files.length > 0) {
+                         // Mostra o nome do arquivo e habilita o botão
+                         feedbackEl.textContent = `Arquivo: ${this.files[0].name}`;
+                         feedbackEl.classList.remove('text-red-500'); // Remove classe de erro (se houver)
+                         feedbackEl.classList.add('text-green-600'); // Adiciona classe de sucesso
+                         processBtn.disabled = false; // Habilita o botão
+                     } else {
+                         // Reseta se nenhum arquivo for selecionado
+                         feedbackEl.textContent = 'Nenhum arquivo selecionado.';
+                         feedbackEl.classList.remove('text-green-600');
+                         processBtn.disabled = true; // Desabilita o botão
+                     }
+                 });
+
+                 // Evento de clique no botão (apenas simulação)
+                 processBtn.addEventListener('click', () => {
+                     if (!fileInput.files || fileInput.files.length === 0) return; // Não faz nada se não houver arquivo
+                     // Exibe um alerta simulando o processamento
+                     alert(`Simulando processamento do arquivo: ${fileInput.files[0].name}\n(Em uma aplicação real, aqui ocorreria o envio e análise dos dados)`);
+                     // Em uma aplicação real, aqui você enviaria o arquivo para o backend
+                 });
+             </script>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+             <div class="content-card">
+                <button class="info-button" aria-label="Informação sobre AOV">
+                    <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/info.svg" alt="Ícone Info"/>
+                    <span class="tooltip">
+                        <strong>O que é:</strong> Valor Médio por Pedido (quanto cada cliente gasta por compra).<br>
+                        <strong>Importância (Nutralive):</strong> Indica o valor de cada venda vinda dos anúncios. Aumentar o AOV (ex: kits, mais frascos por pedido) melhora diretamente o retorno sobre o investimento em marketing online.
+                    </span>
+                </button>
+                <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/shopping-bag.svg" alt="Ícone AOV" class="w-5 h-5 text-blue-600"/> Valor Médio por Pedido (AOV) </h3>
+                <div class="text-center mb-4"> <div class="kpi-label">AOV Atual</div> <div class="kpi-value-large text-blue-600">R$ 413,00</div> </div>
+                <p class="kpi-description"> Valor médio gasto por cliente em cada transação. Impacta diretamente o LTV. </p>
+                <div class="chart-placeholder h-32 mt-4"> [Placeholder: Gráfico de Linha - Tendência do AOV Mensal] </div>
+            </div>
+
+            <div class="content-card">
+                 <button class="info-button" aria-label="Informação sobre Frequência de Compra"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/info.svg" alt="Ícone Info"/> <span class="tooltip"> <strong>O que é:</strong> Frequência de Compra (quantas vezes um cliente compra em um período).<br> <strong>Importância (Nutralive):</strong> Clientes que compram nossos nutracêuticos com mais frequência (recompra) aumentam muito seu valor total, diluindo o custo do anúncio que o trouxe inicialmente. Foco em retenção! </span> </button>
+                 <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/repeat.svg" alt="Ícone Frequência" class="w-5 h-5 text-teal-600"/> Frequência de Compra </h3>
+                 <div class="text-center mb-4"> <div class="kpi-label">Compras / Cliente / Ano</div> <div class="kpi-value-large text-teal-600">4.5</div> </div>
+                 <p class="kpi-description"> Quantas vezes, em média, um cliente compra por período (ex: ano). Essencial para retenção. </p>
+                 <div class="chart-placeholder h-32 mt-4"> [Placeholder: Histograma - Distribuição da Frequência de Compra] </div>
+            </div>
+
+            <div class="content-card">
+                 <button class="info-button" aria-label="Informação sobre Tempo de Vida do Cliente"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/info.svg" alt="Ícone Info"/> <span class="tooltip"> <strong>O que é:</strong> Tempo de Vida do Cliente (duração média do relacionamento).<br> <strong>Importância (Nutralive):</strong> Mostra por quanto tempo, em média, conseguimos manter um cliente comprando após ser adquirido via anúncio. Quanto maior, mais valor ele gera e mais podemos investir para adquiri-lo. </span> </button>
+                 <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/calendar-clock.svg" alt="Ícone Tempo de Vida" class="w-5 h-5 text-indigo-600"/> Tempo de Vida do Cliente </h3>
+                 <div class="text-center mb-4"> <div class="kpi-label">Duração Média</div> <div class="kpi-value-large text-indigo-600">14 meses</div> </div>
+                 <p class="kpi-description"> Duração média do relacionamento do cliente com a empresa. Componente direto no LTV. </p>
+                 <div class="chart-placeholder h-32 mt-4"> [Placeholder: Gráfico de Linha - Tempo Médio de Vida por Cohort] </div>
+            </div>
+
+            <div class="content-card">
+                 <button class="info-button" aria-label="Informação sobre Taxa de Churn"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/info.svg" alt="Ícone Info"/> <span class="tooltip"> <strong>O que é:</strong> Taxa de Churn (percentual de clientes perdidos em um período).<br> <strong>Importância (Nutralive):</strong> Indica a velocidade com que perdemos clientes. Reduzir o churn (ex: bom suporte, resultados visíveis dos nutracêuticos, comunicação pós-venda) é crucial para o LTV e para a saúde do negócio baseado em anúncios. </span> </button>
+                 <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/user-x.svg" alt="Ícone Churn" class="w-5 h-5 text-red-600"/> Taxa de Churn </h3>
+                 <div class="text-center mb-4"> <div class="kpi-label">Churn Mensal</div> <div class="kpi-value-large text-red-600">3.5%</div> </div>
+                 <p class="kpi-description"> Percentual de clientes que deixam de fazer negócios. Crucial em modelos de assinatura/recompra. </p>
+                 <div class="chart-placeholder h-32 mt-4"> [Placeholder: Gráfico de Linha - Evolução da Taxa de Churn Mensal] </div>
+            </div>
+
+             <div class="content-card">
+                 <button class="info-button" aria-label="Informação sobre Custo de Aquisição (CAC)"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/info.svg" alt="Ícone Info"/> <span class="tooltip"> <strong>O que é:</strong> Custo de Aquisição de Clientes (quanto gastamos para trazer um novo cliente).<br> <strong>Importância (Nutralive):</strong> Soma todos os gastos com anúncios (Facebook, Google Ads, etc.) e vendas dividido pelos novos clientes. Precisamos saber isso para garantir que o LTV compensa o investimento em marketing. </span> </button>
+                 <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/locate-fixed.svg" alt="Ícone CAC" class="w-5 h-5 text-orange-600"/> Custo de Aquisição (CAC) </h3>
+                 <div class="text-center mb-4"> <div class="kpi-label">CAC Médio</div> <div class="kpi-value-large text-orange-600">R$ 100,00</div> </div>
+                 <p class="kpi-description"> Custo total para adquirir um novo cliente. Deve ser comparado ao LTV para avaliar lucratividade. </p>
+                 <div class="chart-placeholder h-32 mt-4"> [Placeholder: Gráfico de Barras - CAC por Canal de Marketing] </div>
+            </div>
+
+            <div class="content-card">
+                 <button class="info-button" aria-label="Informação sobre Razão LTV/CAC"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/info.svg" alt="Ícone Info"/> <span class="tooltip"> <strong>O que é:</strong> Razão LTV/CAC (compara o valor total do cliente com o custo para adquiri-lo).<br> <strong>Importância (Nutralive):</strong> É o termômetro da saúde financeira do nosso marketing online. Se for baixo (&lt;3), gastamos muito em anúncios para pouco retorno. Se for alto (&gt;3), nosso modelo de aquisição e venda de nutracêuticos é sustentável. </span> </button>
+                 <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/ratio.svg" alt="Ícone LTV/CAC" class="w-5 h-5 text-green-600"/> Razão LTV / CAC </h3>
+                 <div class="text-center mb-4"> <div class="kpi-label">LTV / CAC</div> <div class="kpi-value-large text-green-600">4.2x</div> </div>
+                 <p class="kpi-description"> Indica quantas vezes o valor do cliente (LTV) supera o custo para adquiri-lo (CAC). Ideal > 3:1. </p>
+                 <div class="chart-placeholder h-32 mt-4"> [Placeholder: Gauge/Medidor - Razão LTV/CAC atual vs Meta] </div>
+            </div>
+        </section>
+
+        <section class="mb-8 content-card">
+             <h3 class="section-title"> <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/table-2.svg" alt="Ícone Tabela" class="w-5 h-5 text-slate-500"/> Resumo Comparativo das Métricas </h3>
+             <div class="overflow-x-auto"> <table class="w-full min-w-[600px]"> <thead> <tr><th>Métrica</th><th>Descrição</th><th>Exemplo</th><th>Contexto Principal</th></tr> </thead>
+                     <tbody>
+                         <tr><td class="font-medium">Valor Médio por Pedido (AOV)</td><td>Valor médio gasto por transação</td><td>R$ 50 por compra</td><td>E-commerce, varejo</td></tr>
+                         <tr><td class="font-medium">Frequência de Compra</td><td>Número médio de compras por cliente em um período</td><td>4 compras/ano</td><td>Fidelização, marketing</td></tr>
+                         <tr><td class="font-medium">Tempo de Vida do Cliente</td><td>Duração média de relacionamento com a empresa</td><td>5 anos</td><td>Longo prazo (ex: assinaturas)</td></tr>
+                         <tr><td class="font-medium">Taxa de Churn</td><td>Percentual de clientes perdidos</td><td>10% de churn mensal</td><td>Assinaturas, SaaS</td></tr>
+                         <tr><td class="font-medium">Custo de Aquisição (CAC)</td><td>Custo para adquirir um novo cliente</td><td>R$ 100 por cliente</td><td>Marketing, finanças</td></tr>
+                         <tr><td class="font-medium">Razão LTV/CAC</td><td>Relação entre valor do cliente e custo de aquisição</td><td>3:1 (Ideal)</td><td>Sustentabilidade financeira</td></tr>
+                     </tbody>
+                 </table>
+            </div>
+        </section>
+
+        <footer class="text-center text-slate-400 text-xs mt-10 py-4">
+            Dashboard Nutralive - Mockup Conceitual v2.6 (Estilo Site)
+        </footer>
+
+    </main>
+
+</body>
+</html>
